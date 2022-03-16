@@ -1,6 +1,7 @@
 import com.google.firebase.FirebaseApp
 import features.auth.interactors.CreateUserAccountInteractor
 import features.test.test
+import features.worker.worker
 import firebase.FirebaseFactory
 import firebase.FirebasePrincipal
 import firebase.firebase
@@ -51,7 +52,7 @@ fun Application.main(
 
     install(Routing) {
         authenticate(FIREBASE) {
-            test()
+            worker()
         }
     }
 }

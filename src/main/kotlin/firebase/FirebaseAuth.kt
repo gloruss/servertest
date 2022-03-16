@@ -21,8 +21,8 @@ import io.ktor.response.respond
 
 private const val FirebaseAuthKey = "FirebaseAuth"
 
-private const val testToken = ""
-private const val testUserId = ""
+private const val testToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2NDczMzYyMTQsImV4cCI6MTY3ODg3MjIxNCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.qYyi4MNMiTI4UotekMiNmnJTbrSEc0cBqbucQZ32jOo"
+private const val testUserId = "d0b282f8-a441-11ec-b909-0242ac120002"
 
 data class FirebaseCredential(val token: FirebaseToken) : Credential
 
