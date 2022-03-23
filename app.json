@@ -2,5 +2,5 @@
   "name": "Ktor template",
   "description": "Ktor template",
   "image": "heroku/java",
-  "addons": []
+  "addons": ["heroku-postgresql"]
 }
