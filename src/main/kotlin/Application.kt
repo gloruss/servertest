@@ -13,6 +13,8 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import org.apache.http.auth.AuthenticationException
+import org.koin.ktor.ext.Koin
+
 import util.CrashLoggerFactory
 import util.DatabaseFactory
 import util.respondError
@@ -22,10 +24,13 @@ private const val FIREBASE = "firebase"
 fun Application.main(
     createUserAccountInteractor: CreateUserAccountInteractor = CreateUserAccountInteractor()
 ) {
+
     FirebaseFactory.init()
     DatabaseFactory.init()
     CrashLoggerFactory.init()
-
+    install(Koin){
+        modules(workerModule)
+    }
     install(ContentNegotiation) {
         json()
     }

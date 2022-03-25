@@ -10,6 +10,7 @@ object FirebaseFactory {
     fun init() {
         val serviceAccount = getEnvServiceAccount() ?: getLocalServiceAccount()
 
+
         val options = FirebaseOptions.builder()
             .setCredentials(GoogleCredentials.fromStream(serviceAccount))
             .build()

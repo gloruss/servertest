@@ -20,10 +20,12 @@ class WorkerRepository {
 
     suspend fun put(worker: Worker) = dbQuery {
         WorkerDao.insert {
-            it[id] = worker.id
+
             it[name] = worker.name
             it[uuid] = worker.uuid
-        }
+        }.resultedValues?.map {
+            toWorker(it)
+        }?.singleOrNull()
     }
 
     suspend fun getWorkers() = dbQuery {
