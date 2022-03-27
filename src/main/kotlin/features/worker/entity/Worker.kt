@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class Worker(
     val id : Int? = null,
     val name : String,
-    val uuid : String
+    val uuid : String? = null
 )

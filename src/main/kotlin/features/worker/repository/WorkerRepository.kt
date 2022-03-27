@@ -9,8 +9,12 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import util.dbQuery
+import java.util.*
 
 class WorkerRepository {
+
+
+
 
     suspend fun getWorkerById(id : Int) = dbQuery{
         WorkerDao.select { WorkerDao.id eq id }
@@ -22,7 +26,7 @@ class WorkerRepository {
         WorkerDao.insert {
 
             it[name] = worker.name
-            it[uuid] = worker.uuid
+            it[uuid] = UUID.randomUUID().toString()
         }.resultedValues?.map {
             toWorker(it)
         }?.singleOrNull()
