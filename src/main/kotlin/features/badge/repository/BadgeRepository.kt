@@ -39,7 +39,7 @@ class BadgeRepository {
         id = row[BadgeDao.id],
         start = row[BadgeDao.start].toString(),
         end = row[BadgeDao.end].toString(),
-        date = simpleDateFormat.format(row[BadgeDao.date]),
+        date = row[BadgeDao.date].toString(),
         worker_id = row[BadgeDao.workerId],
         worker_uuid = row[BadgeDao.worker_uuid].toString(),
         hours = row[BadgeDao.hours],
