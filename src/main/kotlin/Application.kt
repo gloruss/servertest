@@ -1,5 +1,6 @@
 import com.google.firebase.FirebaseApp
 import features.auth.interactors.CreateUserAccountInteractor
+import features.badge.badge
 import features.test.test
 import features.worker.worker
 import firebase.FirebaseFactory
@@ -58,6 +59,7 @@ fun Application.main(
     install(Routing) {
         authenticate(FIREBASE) {
             worker()
+            badge()
         }
     }
 }
