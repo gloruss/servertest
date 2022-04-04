@@ -37,8 +37,8 @@ class BadgeRepository {
 
     private fun toBadge(row: ResultRow) : Badge = Badge(
         id = row[BadgeDao.id],
-        start = simpletimeFormat.format(row[BadgeDao.start]),
-        end = simpletimeFormat.format(row[BadgeDao.end]),
+        start = row[BadgeDao.start].toString(),
+        end = row[BadgeDao.end].toString(),
         date = simpleDateFormat.format(row[BadgeDao.date]),
         worker_id = row[BadgeDao.workerId],
         worker_uuid = row[BadgeDao.worker_uuid].toString(),
