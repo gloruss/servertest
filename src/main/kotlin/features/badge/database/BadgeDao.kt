@@ -9,6 +9,6 @@ object BadgeDao : Table("badge"){
     val workerId = integer("worker_id")
     val date = date("date")
     val worker_uuid = uuid("worker_uuid")
-    val hours = integer("worker_hour").default(0)
+    val hours = integer("hours").default(0)
     val type = varchar("type",256)
 }
