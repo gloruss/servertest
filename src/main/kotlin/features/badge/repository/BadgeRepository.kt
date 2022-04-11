@@ -27,7 +27,9 @@ class BadgeRepository {
             if(savedBadge != null){
                 BadgeDao.update {
                     it[end] = DateTime.parse(badge.time)
+
                 }
+                savedBadge.copy(end = badge.time)
             }
             else{
                 BadgeDao.insert {
