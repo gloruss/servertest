@@ -2,8 +2,8 @@ package features.badge.repository
 
 import features.badge.database.BadgeDao
 import features.badge.entity.Badge
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
+import features.badge.entity.BadgeRequest
+import org.jetbrains.exposed.sql.*
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormatter
 
@@ -15,24 +15,38 @@ import java.time.format.DateTimeFormatter.*
 import java.util.*
 
 
+
 class BadgeRepository {
 
     val simpletimeFormat = SimpleDateFormat("HH:mm")
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
-    suspend fun insertBadge(badge: Badge)= dbQuery {
-        BadgeDao.insert {
-            it[start] = DateTime.parse(badge.start)
-            it[date] = DateTime.parse(badge.date)
-            it[end] = DateTime.parse(badge.end)
-            it[workerId] = badge.worker_id
-            it[worker_uuid] = UUID.fromString(badge.worker_uuid)
-            it[hours] = badge.hours
-            it[type] = badge.type
-        }.resultedValues?.map {
-            toBadge(it)
-        }?.singleOrNull()
+    suspend fun insertBadge(badge: BadgeRequest) {
+        dbQuery {
+            val savedBadge = getBadgeforWorker(UUID.fromString(badge.worker_uuid), badge.time)
+            if(savedBadge != null){
+                BadgeDao.update {
+                    it[end] = DateTime.parse(badge.time)
+                }
+            }
+            else{
+                BadgeDao.insert {
+                    it[start] = DateTime.parse(badge.time)
+                    it[date] = DateTime.parse(badge.date)
+                    it[worker_uuid] = UUID.fromString(badge.worker_uuid)
+                }.resultedValues?.map {
+                    toBadge(it)
+                }?.singleOrNull()
+            }
+
+        }
     }
+
+
+     fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? =
+        BadgeDao.select { (BadgeDao.worker_uuid eq(workerUUID)) and (BadgeDao.date eq(DateTime.parse(date))  ) }
+            .map { toBadge(it) }.firstOrNull()
+
 
 
     private fun toBadge(row: ResultRow) : Badge = Badge(
