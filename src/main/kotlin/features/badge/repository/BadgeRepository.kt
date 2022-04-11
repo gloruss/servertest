@@ -52,11 +52,11 @@ class BadgeRepository {
     private fun toBadge(row: ResultRow) : Badge = Badge(
         id = row[BadgeDao.id],
         start = row[BadgeDao.start].toString(),
-        end = row[BadgeDao.end].toString(),
+        end = row.getOrNull(BadgeDao.end).toString(),
         date = row[BadgeDao.date].toString(),
-        worker_id = row[BadgeDao.workerId],
+        worker_id = row.getOrNull(BadgeDao.workerId),
         worker_uuid = row[BadgeDao.worker_uuid].toString(),
-        hours = row[BadgeDao.hours],
-        type = row[BadgeDao.type]
+        hours = row.getOrNull(BadgeDao.hours) ?: 0,
+        type = row.getOrNull(BadgeDao.type) ?:""
     )
 }
