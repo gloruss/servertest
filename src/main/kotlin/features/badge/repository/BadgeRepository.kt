@@ -21,7 +21,7 @@ class BadgeRepository {
     val simpletimeFormat = SimpleDateFormat("HH:mm")
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
-    suspend fun insertBadge(badge: BadgeRequest) {
+    suspend fun insertBadge(badge: BadgeRequest) =
         dbQuery {
             val savedBadge = getBadgeforWorker(UUID.fromString(badge.worker_uuid), badge.date)
             if(savedBadge != null){
@@ -42,7 +42,7 @@ class BadgeRepository {
             }
 
         }
-    }
+
 
 
      fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? =

@@ -19,6 +19,7 @@ fun Route.badge(
               val badge = call.receive<BadgeRequest>()
               val result = insertBadgeInteractor.execute(badge)
               if(result != null){
+
                    call.respond(HttpStatusCode.OK,result)
               }
               else{
