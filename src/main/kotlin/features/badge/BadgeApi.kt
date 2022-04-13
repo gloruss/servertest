@@ -2,6 +2,8 @@ package features.badge
 
 import features.badge.entity.Badge
 import features.badge.entity.BadgeRequest
+import features.badge.interactor.EndBadgeInteractor
+import features.badge.interactor.GetBadgeInteractor
 import features.badge.interactor.InsertBadgeInteractor
 import features.worker.interactor.InsertWorkerInteractor
 import io.ktor.application.*
@@ -12,19 +14,32 @@ import io.ktor.routing.*
 import org.koin.ktor.ext.get
 
 fun Route.badge(
-     insertBadgeInteractor: InsertBadgeInteractor = InsertBadgeInteractor()
+     insertBadgeInteractor: InsertBadgeInteractor = InsertBadgeInteractor(),
+     getBadgeInteractor: GetBadgeInteractor = GetBadgeInteractor(),
+     endBadgeInteractor: EndBadgeInteractor = EndBadgeInteractor()
 ){
     route("/test"){
          post("/badge") {
-              val badge = call.receive<BadgeRequest>()
-              val result = insertBadgeInteractor.execute(badge)
-              if(result != null){
-
-                   call.respond(HttpStatusCode.OK,result)
+              val badgeRequest = call.receive<BadgeRequest>()
+              val badge = getBadgeInteractor.execute(badgeRequest)
+              if(badge != null){
+                   val count =  endBadgeInteractor.execute(badgeRequest)
+                    if(count >0)
+                         call.respond(HttpStatusCode.OK,badge.copy(end = badgeRequest.time))
+                   else
+                        call.respond(HttpStatusCode.InternalServerError,"Cant update badge")
               }
               else{
-                   call.respond(HttpStatusCode.InternalServerError)
+                   val result = insertBadgeInteractor.execute(badgeRequest)
+                   if(result != null){
+
+                        call.respond(HttpStatusCode.OK,result)
+                   }
+                   else{
+                        call.respond(HttpStatusCode.InternalServerError)
+                   }
               }
+
          }
          get("/badge/{id}"){
 
