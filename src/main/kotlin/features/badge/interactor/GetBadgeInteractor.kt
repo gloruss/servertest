@@ -10,5 +10,5 @@ class GetBadgeInteractor : KoinComponent {
 
     val badgeRepository : BadgeRepository by inject()
 
-    suspend fun execute(badgeRequest: BadgeRequest) = badgeRepository.getBadgeforWorker(UUID.fromString(badgeRequest.worker_uuid),badgeRequest.date)
+    suspend fun execute(badgeRequest: BadgeRequest) = badgeRepository.getBadgeforWorker(UUID.fromString(badgeRequest.worker_uuid),badgeRequest.time)
 }

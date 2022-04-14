@@ -4,16 +4,14 @@ import features.badge.database.BadgeDao
 import features.badge.entity.Badge
 import features.badge.entity.BadgeRequest
 import org.jetbrains.exposed.sql.*
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormatter
+import org.jetbrains.exposed.sql.javatime.*
+import org.jetbrains.exposed.sql.javatime.Date
 
 import util.dbQuery
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.LocalTime
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter.*
 import java.util.*
-
 
 
 class BadgeRepository {
@@ -24,8 +22,7 @@ class BadgeRepository {
     suspend fun insertBadge(badge: BadgeRequest) =
         dbQuery {
                 BadgeDao.insert {
-                    it[start] = DateTime.parse(badge.time)
-                    it[date] = DateTime.parse(badge.date)
+                    it[start] = datetime(badge.time)
                     it[worker_uuid] = UUID.fromString(badge.worker_uuid)
                 }.resultedValues?.map {
                     toBadge(it)
@@ -37,24 +34,24 @@ class BadgeRepository {
 
     suspend fun modifyBadge(badge: BadgeRequest) = dbQuery {
         BadgeDao.update {
-            it[end] = DateTime.parse(badge.time)
+            it[end] = datetime(badge.time)
         }
     }
 
 
 
      suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? =
-        BadgeDao.select { (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.date) eq(DateTime.parse(date))  ) }
+        BadgeDao.select {
+            (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.date.day()) eq(dateParam(LocalDate.parse(date)) )) }
             .map { toBadge(it) }.firstOrNull()
 
 
 
 
     private fun toBadge(row: ResultRow) : Badge = Badge(
-        id = row[BadgeDao.id],
+        id = row[BadgeDao.id].value,
         start = row[BadgeDao.start].toString(),
         end = row.getOrNull(BadgeDao.end).toString(),
-        date = row[BadgeDao.date].toString(),
         worker_id = row.getOrNull(BadgeDao.workerId),
         worker_uuid = row[BadgeDao.worker_uuid].toString(),
         hours = row.getOrNull(BadgeDao.hours) ?: 0,
