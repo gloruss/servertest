@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.javatime.Date
 import util.dbQuery
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.*
 import java.util.*
 
@@ -42,7 +43,8 @@ class BadgeRepository {
 
      suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? =
         BadgeDao.select {
-            (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.date.day()) eq(dateParam(LocalDate.parse(date)) )) }
+           val  format = ofPattern("yyyy-MM-dd HH:mm:ss.SSSX")
+            (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.date.day()) eq(dateParam(LocalDate.parse(date,format)) )) }
             .map { toBadge(it) }.firstOrNull()
 
 
