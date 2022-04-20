@@ -33,9 +33,9 @@ class BadgeRepository {
 
 
 
-    suspend fun modifyBadge(badge: BadgeRequest) = dbQuery {
-        BadgeDao.update {
-            it[end] =LocalDateTime.parse(badge.time,formatter)
+    suspend fun modifyBadge(badgeRequest: BadgeRequest) = dbQuery {
+        BadgeDao.insert {
+            it[end] =LocalDateTime.parse(badgeRequest.time,formatter)
         }
     }
 
