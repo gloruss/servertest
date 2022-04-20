@@ -40,12 +40,14 @@ class BadgeRepository {
 
 
 
-     suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? =
-        BadgeDao.select {
-            val formatter = ofPattern("yyyy-MM-dd HH:mm")
-            val formattedDate = LocalDate.parse(date, formatter)
-            (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.date.day()) eq(dateParam(formattedDate)) ) }
-            .map { toBadge(it) }.firstOrNull()
+     suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? = dbQuery {
+         BadgeDao.select {
+             val formatter = ofPattern("yyyy-MM-dd HH:mm")
+             val formattedDate = LocalDate.parse(date, formatter)
+             (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.date.day()) eq(dateParam(formattedDate)) ) }
+             .map { toBadge(it) }.firstOrNull()
+     }
+
 
 
 
