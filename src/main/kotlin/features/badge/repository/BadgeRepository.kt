@@ -11,19 +11,19 @@ import org.jetbrains.exposed.sql.javatime.day
 import util.dbQuery
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter.ofPattern
 import java.util.*
 
 
 class BadgeRepository {
 
-    val simpletimeFormat = SimpleDateFormat("HH:mm")
-    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+    val formatter = ofPattern("yyyy-MM-dd HH:mm")
 
     suspend fun insertBadge(badgeRequest: BadgeRequest) =
         dbQuery {
                 BadgeDao.insert {
-                    it[start] = datetime(badgeRequest.time)
+                    it[start] = LocalDateTime.parse(badgeRequest.time,formatter)
                     it[worker_uuid] = UUID.fromString(badgeRequest.worker_uuid)
                 }.resultedValues?.map {
                     toBadge(it)
@@ -43,7 +43,7 @@ class BadgeRepository {
 
      suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? = dbQuery {
          BadgeDao.select {
-             val formatter = ofPattern("yyyy-MM-dd HH:mm")
+
              val formattedDate = LocalDate.parse(date, formatter)
 
              (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.start) eq(dateParam(formattedDate)) ) }
