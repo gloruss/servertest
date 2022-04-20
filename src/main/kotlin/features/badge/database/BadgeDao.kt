@@ -10,7 +10,6 @@ object BadgeDao : IntIdTable("badge"){
     val start = datetime("start")
     val end = datetime("end")
     val workerId = integer("worker_id")
-    val date = date("date")
     val worker_uuid = uuid("worker_uuid")
     val hours = integer("hours").default(0)
     val type = varchar("type",256)
