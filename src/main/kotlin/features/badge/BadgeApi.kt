@@ -23,8 +23,8 @@ fun Route.badge(
               val badgeRequest = call.receive<BadgeRequest>()
               val badge = getBadgeInteractor.execute(badgeRequest)
               if(badge != null){
-                   val count =  endBadgeInteractor.execute(badgeRequest)
-                    if(count >0)
+                   val count =  endBadgeInteractor.execute(badgeRequest).resultedValues
+                    if(!count.isNullOrEmpty())
                          call.respond(HttpStatusCode.OK,badge.copy(end = badgeRequest.time))
                    else
                         call.respond(HttpStatusCode.InternalServerError,"Cant update badge")
