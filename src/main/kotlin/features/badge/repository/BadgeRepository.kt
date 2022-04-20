@@ -4,6 +4,7 @@ import features.badge.database.BadgeDao
 import features.badge.entity.Badge
 import features.badge.entity.BadgeRequest
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.javatime.Day
 import org.jetbrains.exposed.sql.javatime.dateParam
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.javatime.day
@@ -45,7 +46,7 @@ class BadgeRepository {
              val formatter = ofPattern("yyyy-MM-dd HH:mm")
              val formattedDate = LocalDate.parse(date, formatter)
 
-             (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.start.day()) eq(dateParam(formattedDate).day()) ) }
+             (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.start) eq(dateParam(formattedDate)) ) }
              .map { toBadge(it) }.firstOrNull()
      }
 
