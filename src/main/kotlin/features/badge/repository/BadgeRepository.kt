@@ -46,7 +46,7 @@ class BadgeRepository {
 
              val formattedDate = LocalDateTime.parse(date, formatter)
 
-             (BadgeDao.worker_uuid eq(workerUUID)) /*and (BadgeDao.start eq(formattedDate) ) */}
+             (BadgeDao.worker_uuid eq(workerUUID)) and (BadgeDao.start eq(formattedDate) )}
              .map { toBadge(it) }.firstOrNull()
      }
 
