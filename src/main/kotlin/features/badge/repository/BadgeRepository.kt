@@ -20,11 +20,11 @@ class BadgeRepository {
     val simpletimeFormat = SimpleDateFormat("HH:mm")
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
-    suspend fun insertBadge(badge: BadgeRequest) =
+    suspend fun insertBadge(badgeRequest: BadgeRequest) =
         dbQuery {
                 BadgeDao.insert {
-                    it[start] = datetime(badge.time)
-                    it[worker_uuid] = UUID.fromString(badge.worker_uuid)
+                    it[start] = datetime(badgeRequest.time)
+                    it[worker_uuid] = UUID.fromString(badgeRequest.worker_uuid)
                 }.resultedValues?.map {
                     toBadge(it)
                 }?.singleOrNull()
