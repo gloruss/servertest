@@ -4,14 +4,13 @@ import features.badge.database.BadgeDao
 import features.badge.entity.Badge
 import features.badge.entity.BadgeRequest
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.javatime.*
-import org.jetbrains.exposed.sql.javatime.Date
-
+import org.jetbrains.exposed.sql.javatime.dateParam
+import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.javatime.day
 import util.dbQuery
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatter.*
+import java.time.format.DateTimeFormatter.ofPattern
 import java.util.*
 
 
@@ -43,8 +42,9 @@ class BadgeRepository {
 
      suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? =
         BadgeDao.select {
-
-            (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.date.day()) eq(dateParam(LocalDate.parse(date)) )) }
+            val formatter = ofPattern("yyyy-MM-dd HH:mm")
+            val formattedDate = LocalDate.parse(date, formatter)
+            (BadgeDao.worker_uuid eq(workerUUID)) and ((BadgeDao.date.day()) eq(dateParam(formattedDate)) ) }
             .map { toBadge(it) }.firstOrNull()
 
 
