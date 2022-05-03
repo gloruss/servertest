@@ -9,5 +9,5 @@ class EndBadgeInteractor : KoinComponent {
 
     val badgeRepository : BadgeRepository by inject()
 
-    suspend fun execute(badgeRequest: BadgeRequest) = badgeRepository.modifyBadge(badgeRequest)
+    suspend fun execute(id : Int,badgeRequest: BadgeRequest) = badgeRepository.modifyBadge(id, badgeRequest)
 }

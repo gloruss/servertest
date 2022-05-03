@@ -33,8 +33,11 @@ class BadgeRepository {
 
 
 
-    suspend fun modifyBadge(badgeRequest: BadgeRequest) = dbQuery {
-        BadgeDao.insert {
+    suspend fun modifyBadge(id : Int, badgeRequest: BadgeRequest) = dbQuery {
+        BadgeDao.update ({
+            BadgeDao.id eq(id)
+        }
+        ) {
             it[end] =LocalDateTime.parse(badgeRequest.time,formatter)
         }
     }
@@ -43,13 +46,10 @@ class BadgeRepository {
 
      suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? = dbQuery {
          BadgeDao.select {
-
              val formattedDate = LocalDateTime.parse(date, formatter)
-
              (BadgeDao.worker_uuid eq(workerUUID)) and (BadgeDao.start eq(formattedDate) )}
              .map { toBadge(it) }.firstOrNull()
      }
-
 
 
 
