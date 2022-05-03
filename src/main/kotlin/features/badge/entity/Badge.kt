@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Badge(
-    val id  : Int? = null,
+    val id  : Int,
     val start: String? = null,
     val end : String? = null,
     val worker_id : Int?,

@@ -23,7 +23,7 @@ fun Route.badge(
               val badgeRequest = call.receive<BadgeRequest>()
               val badge = getBadgeInteractor.execute(badgeRequest)
               if(badge != null){
-                   val count =  endBadgeInteractor.execute(badgeRequest)
+                   val count =  endBadgeInteractor.execute(badge.id,badgeRequest)
                     if(count > 0)
                          call.respond(HttpStatusCode.OK,badge.copy(end = badgeRequest.time))
                    else
