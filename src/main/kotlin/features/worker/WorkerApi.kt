@@ -1,6 +1,7 @@
 package features.worker
 
 import features.worker.entity.Worker
+import features.worker.interactor.DeleteworkerInteractor
 import features.worker.interactor.InsertWorkerInteractor
 import io.ktor.application.*
 import io.ktor.http.*
@@ -11,12 +12,13 @@ import util.respondError
 
 fun Route.worker(
         getWorkerInteractor: GetWorkerInteractor = GetWorkerInteractor(),
-        insertWorkerInteractor: InsertWorkerInteractor = InsertWorkerInteractor()
+        insertWorkerInteractor: InsertWorkerInteractor = InsertWorkerInteractor(),
+        deleteworkerInteractor: DeleteworkerInteractor = DeleteworkerInteractor()
 ) = route("/test"){
         get("/worker") {
                 val workers = getWorkerInteractor.execute()
                 if(workers.isNullOrEmpty()){
-                        call.respondError("TRMON", HttpStatusCode.InternalServerError)
+                        call.respond( HttpStatusCode.InternalServerError)
                 }
                 else{
                         call.respond(HttpStatusCode.OK,workers)
@@ -31,6 +33,10 @@ fun Route.worker(
                 else{
                         call.respond(HttpStatusCode.InternalServerError)
                 }
-
+        }
+        delete("/worker") {
+                val worker = call.receive<Worker>()
+                val result = deleteworkerInteractor.execute(worker)
+                call.respond(HttpStatusCode.OK,result)
         }
 }
