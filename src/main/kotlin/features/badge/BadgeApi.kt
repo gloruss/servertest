@@ -12,6 +12,10 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.get
+import java.util.*
+
+const val PARAM_UUID = "uuid"
+const val PARAM_DATE ="date"
 
 fun Route.badge(
      insertBadgeInteractor: InsertBadgeInteractor = InsertBadgeInteractor(),
@@ -41,8 +45,21 @@ fun Route.badge(
               }
 
          }
-         get("/badge/{id}"){
-
+         get("/badge"){
+               val uid = call.request.queryParameters[PARAM_UUID]
+              val date = call.request.queryParameters[PARAM_DATE]
+               if(uid != null && date != null){
+                    val badge = getBadgeInteractor.execute(BadgeRequest(date,uid))
+                    if(badge != null){
+                         call.respond(HttpStatusCode.OK,badge)
+                    }
+                    else{
+                         call.respond(HttpStatusCode.NotFound,)
+                    }
+               }
+              else{
+                   call.respond(HttpStatusCode.BadRequest)
+               }
          }
     }
 }
