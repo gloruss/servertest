@@ -8,7 +8,7 @@ data class Badge(
     val start: String? = null,
     val end : String? = null,
     val worker_id : Int?,
-    val hours : Int = 0,
+    val hours : String,
     val type : String,
     val worker_uuid : String
 

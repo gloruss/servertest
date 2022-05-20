@@ -1,18 +1,14 @@
 package features.badge
 
-import features.badge.entity.Badge
 import features.badge.entity.BadgeRequest
 import features.badge.interactor.EndBadgeInteractor
 import features.badge.interactor.GetBadgeInteractor
 import features.badge.interactor.InsertBadgeInteractor
-import features.worker.interactor.InsertWorkerInteractor
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import org.koin.ktor.ext.get
-import java.util.*
 
 const val PARAM_UUID = "uuid"
 const val PARAM_DATE ="date"
@@ -27,7 +23,7 @@ fun Route.badge(
               val badgeRequest = call.receive<BadgeRequest>()
               val badge = getBadgeInteractor.execute(badgeRequest)
               if(badge != null){
-                   val count =  endBadgeInteractor.execute(badge.id,badgeRequest)
+                   val count =  endBadgeInteractor.execute(badge,badgeRequest)
                     if(count > 0)
                          call.respond(HttpStatusCode.OK,badge.copy(end = badgeRequest.time))
                    else

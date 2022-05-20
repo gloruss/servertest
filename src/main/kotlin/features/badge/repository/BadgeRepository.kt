@@ -1,22 +1,26 @@
 package features.badge.repository
 
 import features.badge.database.BadgeDao
-import features.badge.database.BadgeDao.start
 import features.badge.entity.Badge
 import features.badge.entity.BadgeRequest
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.javatime.*
 import util.dbQuery
-import java.text.SimpleDateFormat
-import java.time.LocalDate
+import java.time.Duration
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter.ofPattern
+import java.time.temporal.TemporalField
 import java.util.*
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.DurationUnit
 
 
 class BadgeRepository {
 
     val formatter = ofPattern("yyyy-MM-dd HH:mm")
+
 
     suspend fun insertBadge(badgeRequest: BadgeRequest) =
         dbQuery {
@@ -31,12 +35,19 @@ class BadgeRepository {
 
 
 
-    suspend fun modifyBadge(id : Int, badgeRequest: BadgeRequest) = dbQuery {
+    suspend fun modifyBadge(badge: Badge, badgeRequest: BadgeRequest) = dbQuery {
+
         BadgeDao.update ({
-            BadgeDao.id eq(id)
+            BadgeDao.id eq(badge.id)
         }
         ) {
-            it[end] =LocalDateTime.parse(badgeRequest.time,formatter)
+            val startDate = LocalDateTime.parse(badge.start,formatter)
+
+            val endTime = LocalDateTime.parse(badgeRequest.time,formatter)
+            it[end] = endTime
+            val duration = Duration.between(startDate,endTime).toMillis()
+            it[hours] = LocalTime.of(duration.hours.toInt(DurationUnit.HOURS),duration.minutes.toInt(DurationUnit.MINUTES))
+
         }
     }
 
@@ -45,6 +56,7 @@ class BadgeRepository {
      suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? = dbQuery {
          BadgeDao.select {
              val formattedDate = LocalDateTime.parse(date, formatter)
+
              (BadgeDao.worker_uuid eq(workerUUID)) and (BadgeDao.start.date() eq(formattedDate.toLocalDate()) )}
              .map { toBadge(it) }.firstOrNull()
      }
@@ -53,11 +65,11 @@ class BadgeRepository {
 
     private fun toBadge(row: ResultRow) : Badge = Badge(
         id = row[BadgeDao.id].value,
-        start = row[BadgeDao.start].toString(),
-        end = row.getOrNull(BadgeDao.end).toString(),
+        start = row[BadgeDao.start].toString().format(formatter),
+        end = row.getOrNull(BadgeDao.end).toString().format(formatter),
         worker_id = row.getOrNull(BadgeDao.workerId),
         worker_uuid = row[BadgeDao.worker_uuid].toString(),
-        hours = row.getOrNull(BadgeDao.hours) ?: 0,
+        hours = row.getOrNull(BadgeDao.hours).toString(),
         type = row.getOrNull(BadgeDao.type) ?:""
     )
 }
