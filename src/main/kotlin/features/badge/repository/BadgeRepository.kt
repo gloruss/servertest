@@ -65,8 +65,8 @@ class BadgeRepository {
 
     private fun toBadge(row: ResultRow) : Badge = Badge(
         id = row[BadgeDao.id].value,
-        start = row[BadgeDao.start].toString().format(formatter),
-        end = row.getOrNull(BadgeDao.end).toString().format(formatter),
+        start = row[BadgeDao.start].format(formatter),
+        end = row.getOrNull(BadgeDao.end)?.format(formatter),
         worker_id = row.getOrNull(BadgeDao.workerId),
         worker_uuid = row[BadgeDao.worker_uuid].toString(),
         hours = row.getOrNull(BadgeDao.hours).toString(),
