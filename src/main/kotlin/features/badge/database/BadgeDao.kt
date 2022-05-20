@@ -12,6 +12,6 @@ object BadgeDao : IntIdTable("badge"){
     val end = datetime("end")
     val workerId = integer("worker_id")
     val worker_uuid = uuid("worker_uuid")
-    val hours = integer("hours")
+    val hours = long("hours")
     val type = varchar("type",256)
 }

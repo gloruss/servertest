@@ -46,9 +46,9 @@ class BadgeRepository {
 
             val endTime = LocalDateTime.parse(badgeRequest.time,formatter)
             it[end] = endTime
-            val duration = Duration.between(startDate,endTime).toMillis()
-            ChronoUnit.MINUTES.between(startDate,endTime)
-            it[hours] = LocalTime.of(duration.hours.toInt(DurationUnit.HOURS),duration.minutes.toInt(DurationUnit.MINUTES))
+             //Duration.between(startDate,endTime).toMillis()
+            val duration =ChronoUnit.MINUTES.between(startDate,endTime)
+            it[hours] = duration
 
         }
     }
