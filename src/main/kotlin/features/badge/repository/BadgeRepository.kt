@@ -10,6 +10,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter.ofPattern
+import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalField
 import java.util.*
 import kotlin.time.Duration.Companion.hours
@@ -46,6 +47,7 @@ class BadgeRepository {
             val endTime = LocalDateTime.parse(badgeRequest.time,formatter)
             it[end] = endTime
             val duration = Duration.between(startDate,endTime).toMillis()
+            ChronoUnit.MINUTES.between(startDate,endTime)
             it[hours] = LocalTime.of(duration.hours.toInt(DurationUnit.HOURS),duration.minutes.toInt(DurationUnit.MINUTES))
 
         }
