@@ -48,7 +48,7 @@ class BadgeRepository {
             it[end] = endTime
              //Duration.between(startDate,endTime).toMillis()
             val duration =ChronoUnit.MINUTES.between(startDate,endTime)
-            it[hours] = duration
+            it[hours] = duration.toInt()
 
         }
     }
@@ -71,7 +71,7 @@ class BadgeRepository {
         end = row.getOrNull(BadgeDao.end)?.format(formatter),
         worker_id = row.getOrNull(BadgeDao.workerId),
         worker_uuid = row[BadgeDao.worker_uuid].toString(),
-        hours = row.getOrNull(BadgeDao.hours).toString(),
+        hours = row.getOrNull(BadgeDao.hours),
         type = row.getOrNull(BadgeDao.type) ?:""
     )
 }
