@@ -66,7 +66,6 @@ class BadgeRepository {
     suspend fun getBadgeInMonth(workerUUID: UUID, date: String): List<Badge> = dbQuery {
         BadgeDao.select {
             val formattedDate = LocalDateTime.parse(date, formatter)
-            formattedDate.month.value
             (BadgeDao.worker_uuid eq(workerUUID)) and (BadgeDao.start.month() eq(formattedDate.month.value) )}
             .map { toBadge(it) }
         }
