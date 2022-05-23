@@ -3,6 +3,7 @@ package features.badge
 import features.badge.entity.BadgeRequest
 import features.badge.interactor.EndBadgeInteractor
 import features.badge.interactor.GetBadgeInteractor
+import features.badge.interactor.GetMonthBadgeInteractor
 import features.badge.interactor.InsertBadgeInteractor
 import io.ktor.application.*
 import io.ktor.http.*
@@ -16,7 +17,9 @@ const val PARAM_DATE ="date"
 fun Route.badge(
      insertBadgeInteractor: InsertBadgeInteractor = InsertBadgeInteractor(),
      getBadgeInteractor: GetBadgeInteractor = GetBadgeInteractor(),
-     endBadgeInteractor: EndBadgeInteractor = EndBadgeInteractor()
+     endBadgeInteractor: EndBadgeInteractor = EndBadgeInteractor(),
+     getMonthBadgeInteractor: GetMonthBadgeInteractor = GetMonthBadgeInteractor()
+
 ){
     route("/test"){
          post("/badge") {
@@ -56,6 +59,18 @@ fun Route.badge(
               else{
                    call.respond(HttpStatusCode.BadRequest)
                }
+         }
+
+         get("/badge_month"){
+              val uid = call.request.queryParameters[PARAM_UUID]
+              val date = call.request.queryParameters[PARAM_DATE]
+              if(uid != null && date != null){
+                   val badges = getMonthBadgeInteractor.execute(BadgeRequest(date,uid))
+                   call.respond(HttpStatusCode.OK,badges)
+              }
+              else{
+                   call.respond(HttpStatusCode.BadRequest)
+              }
          }
     }
 }
