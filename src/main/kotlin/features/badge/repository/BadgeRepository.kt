@@ -54,6 +54,16 @@ class BadgeRepository {
     }
 
 
+    suspend fun modifyBadgeHours(badge: Badge, badgeRequest: BadgeRequest) = dbQuery {
+        BadgeDao.update ({
+            BadgeDao.id eq(badge.id)
+        }) {
+            it[hours] = badgeRequest.hours
+        }
+    }
+
+
+
 
      suspend fun getBadgeforWorker(workerUUID: UUID, date : String) : Badge? = dbQuery {
          BadgeDao.select {
@@ -69,6 +79,7 @@ class BadgeRepository {
             (BadgeDao.worker_uuid eq(workerUUID)) and (BadgeDao.start.month() eq(formattedDate.month.value) )}
             .map { toBadge(it) }
         }
+
 
 
 

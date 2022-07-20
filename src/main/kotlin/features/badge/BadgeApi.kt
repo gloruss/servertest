@@ -1,10 +1,8 @@
 package features.badge
 
+import features.badge.entity.Badge
 import features.badge.entity.BadgeRequest
-import features.badge.interactor.EndBadgeInteractor
-import features.badge.interactor.GetBadgeInteractor
-import features.badge.interactor.GetMonthBadgeInteractor
-import features.badge.interactor.InsertBadgeInteractor
+import features.badge.interactor.*
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
@@ -18,7 +16,8 @@ fun Route.badge(
      insertBadgeInteractor: InsertBadgeInteractor = InsertBadgeInteractor(),
      getBadgeInteractor: GetBadgeInteractor = GetBadgeInteractor(),
      endBadgeInteractor: EndBadgeInteractor = EndBadgeInteractor(),
-     getMonthBadgeInteractor: GetMonthBadgeInteractor = GetMonthBadgeInteractor()
+     getMonthBadgeInteractor: GetMonthBadgeInteractor = GetMonthBadgeInteractor(),
+     modifyBadgeHoursInteractor: ModifyBadgeHoursInteractor = ModifyBadgeHoursInteractor()
 
 ){
     route("/test"){
@@ -43,6 +42,17 @@ fun Route.badge(
                    }
               }
 
+         }
+         post("/badge_hours") {
+              val badgeRequest = call.receive<BadgeRequest>()
+              val badge = getBadgeInteractor.execute(badgeRequest)
+              if(badge != null){
+                   val count =  modifyBadgeHoursInteractor.execute(badge, badgeRequest)
+                   if(count > 0)
+                        call.respond(HttpStatusCode.OK,badge.copy(hours = badgeRequest.hours))
+                   else
+                        call.respond(HttpStatusCode.InternalServerError,"Cant update badge")
+              }
          }
          get("/badge"){
                val uid = call.request.queryParameters[PARAM_UUID]
@@ -74,3 +84,4 @@ fun Route.badge(
          }
     }
 }
+
