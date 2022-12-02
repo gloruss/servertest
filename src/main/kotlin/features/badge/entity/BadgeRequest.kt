@@ -6,7 +6,8 @@ import kotlinx.serialization.Serializable
 data class BadgeRequest (
     val time : String,
     val worker_uuid : String,
-    val hours : Int = 0
+    val hours : Int = 0,
+    val enter : Boolean = true
 )
 
 
